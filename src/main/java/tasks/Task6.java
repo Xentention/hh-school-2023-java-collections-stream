@@ -18,9 +18,14 @@ public class Task6 {
   public static Set<String> getPersonDescriptions(Collection<Person> persons,
                                                   Map<Integer, Set<Integer>> personAreaIds,
                                                   Collection<Area> areas) {
-    Map<Integer, String> areasNames = areas.stream().collect(Collectors.toMap(Area::getId, Area::getName));
+    Map<Integer, Area> idToAreaMap = mapIdToArea(areas);
 
     return persons.stream().flatMap(person -> personAreaIds.getOrDefault(person.getId(), Collections.emptySet())
-        .stream().map(areaId -> person.getFirstName() + " - " + areasNames.get(areaId))).collect(Collectors.toSet());
+            .stream().map(areaId -> person.getFirstName() + " - " + idToAreaMap.get(areaId).getName()))
+        .collect(Collectors.toSet());
+  }
+
+  public static Map<Integer, Area> mapIdToArea(Collection<Area> areas) {
+    return areas.stream().collect(Collectors.toMap(Area::getId, t -> t));
   }
 }
