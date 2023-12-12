@@ -2,8 +2,9 @@ package tasks;
 
 import common.Person;
 import common.PersonService;
+
+import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,8 +25,8 @@ public class Task1 {
 
   public List<Person> findOrderedPersons(List<Integer> personIds) {
     Set<Person> persons = personService.findPersons(personIds);
-    return personIds.stream().map((id) -> persons.stream()
-        .filter(person -> Objects.equals(person.getId(), id)).findAny().orElse(null))
-        .filter(Objects::nonNull).collect(Collectors.toList());
+    return persons.stream().sorted(
+        Comparator.comparing(person -> personIds.indexOf(person.getId()))
+    ).collect(Collectors.toList());
   }
 }
